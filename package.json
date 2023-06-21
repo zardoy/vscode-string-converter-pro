@@ -1,0 +1,43 @@
+{
+    "name": "string-converter-pro",
+    "displayName": "String Converter Pro",
+    "publisher": "zardoy",
+    "version": "0.0.0-dev",
+    "license": "MIT",
+    "icon": "resources/icon.png",
+    "web": true,
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onLanguage:typescript",
+        "onLanguage:typescriptreact",
+        "onLanguage:javascript",
+        "onLanguage:javascriptreact"
+    ],
+    "contributes": {},
+    "extensionDependencies": [
+        "zardoy.ts-essential-plugins"
+    ],
+    "scripts": {
+        "start": "vscode-framework start"
+    },
+    "dependencies": {
+        "@types/vscode": "1.77.x",
+        "typescript-json-schema": "0.51.0",
+        "@zardoy/tsconfig": "^1.5.0",
+        "@zardoy/vscode-utils": "^0.0.48",
+        "typescript": "^5.1.3",
+        "vscode-framework": "^0.0.18"
+    },
+    "prettier": {
+        "semi": false,
+        "singleQuote": true,
+        "proseWrap": "never",
+        "tabWidth": 4,
+        "trailingComma": "all",
+        "arrowParens": "avoid",
+        "printWidth": 160,
+        "endOfLine": "auto"
+    }
+}
