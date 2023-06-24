@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@types/node':
+    specifier: ^20.3.1
+    version: 20.3.1
   '@types/vscode':
     specifier: 1.77.x
     version: 1.77.0
