@@ -15,6 +15,8 @@ export const activate = () => {
     vscode.workspace.onDidChangeTextDocument(async ({ document, contentChanges }) => {
         const editor = vscode.window.activeTextEditor
         if (!editor || document !== editor?.document || !contentChanges.length) return
+        contentChanges = contentChanges.toSorted((a, b) => document.offsetAt(a.range.start) - document.offsetAt(b.range.start))
+
         if (prevDollarsResult) {
             const { actions, offset: prevOffset } = prevDollarsResult
             if (
@@ -22,20 +24,25 @@ export const activate = () => {
                 contentChanges.length === actions.length &&
                 prevOffset === document.offsetAt(contentChanges[0]!.range.start) - 1
             ) {
+                const edits: vscode.TextEdit[] = []
+                let multicursorOffset = 0
                 for (const [i, contentChange] of contentChanges.entries()) {
                     const subActions = actions[i]
                     if (!subActions) continue
                     const changeOffset = document.offsetAt(contentChange.range.start)
                     const getPos = (offset: number) => {
                         if (offset + 2 > changeOffset) offset += 2
+                        offset += multicursorOffset
                         return document.positionAt(offset)
                     }
-                    await editor.edit(builder => {
-                        for (const [offset, replaceString] of subActions) {
-                            builder.replace(expandPosition(document, getPos(offset), 1), replaceString)
-                        }
-                    })
+                    for (const [offset, replaceString] of subActions) {
+                        edits.push(vscode.TextEdit.replace(expandPosition(document, getPos(offset), 1), replaceString))
+                    }
+                    multicursorOffset += 2
                 }
+                const edit = new vscode.WorkspaceEdit()
+                edit.set(document.uri, edits)
+                await vscode.workspace.applyEdit(edit)
             }
             prevDollarsResult = null
             return
